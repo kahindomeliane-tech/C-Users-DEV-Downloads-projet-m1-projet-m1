@@ -10,6 +10,7 @@ const io = new Server(server);
 
 app.use(express.json());
 app.use(express.static("public"));
+app.use('/uploads', express.static('uploads'));
 
 const upload = multer({ dest: "uploads/" });
 
@@ -74,9 +75,13 @@ app.post("/upload", upload.single("file"), (req, res) => {
         };
     }
 
+    // Return a URL so clients can access the uploaded file
+    const fileUrl = `/uploads/${file.filename}`;
+
     res.json({
         success: true,
         fileName: file.originalname,
+        fileUrl,
         firstUploader: filesDB[fakeHash].firstUploader
     });
 });

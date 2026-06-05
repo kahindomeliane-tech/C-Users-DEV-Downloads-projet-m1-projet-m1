@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="auth-box">
+
+    <h2>Inscription</h2>
+
+    <div class="form-group">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+    </div>
+
+    <div class="form-group">
+        <input type="password" id="password" placeholder="Mot de passe" required>
+    </div>
+
+    <button onclick="register()" class="btn-login">Créer compte</button>
+
+    <p class="auth-link">
+        Déjà inscrit ?
+        <a href="login.html">Se connecter</a>
+    </p>
+
+</div>
+
+<script>
+
+async function register(){
+
+    const username = document.getElementById("username").value;
+
+    const password = document.getElementById("password").value;
+
+    const response = await fetch("/register", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            username,
+            password
+        })
+    });
+
+    const result = await response.json();
+
+    if(result.success){
+
+        alert("Compte créé");
+
+        window.location = "login.html";
+
+    }else{
+
+        alert(result.message);
+    }
+}
+
+</script>
+
+</body>
+</html>
