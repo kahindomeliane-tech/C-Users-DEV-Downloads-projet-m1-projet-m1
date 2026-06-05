@@ -37,11 +37,13 @@
         .bottom {
             padding: 15px;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
         }
-        .bottom input, .bottom button {
-            flex: 1;
+        .bottom input, .bottom button, .bottom select {
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
         }
         .emoji-bar {
             display: flex;
@@ -53,6 +55,15 @@
         .emoji-bar span {
             cursor: pointer;
             font-size: 20px;
+        }
+        button {
+            background: #00a884;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #00d1a1;
         }
     </style>
 </head>
@@ -78,8 +89,18 @@
     </div>
 
     <div class="bottom">
+        <!-- Sélecteur de groupe -->
+        <select id="groupSelect" title="Sélectionner un groupe">
+            <option value="Groupe1">Groupe 1</option>
+            <option value="Groupe2">Groupe 2</option>
+            <option value="Groupe3">Groupe 3</option>
+            <option value="Groupe4">Groupe 4</option>
+            <option value="Groupe5">Groupe 5</option>
+        </select>
+
         <input type="text" id="messageInput" placeholder="Écrivez votre message...">
         <button onclick="sendMessage()">Envoyer</button>
+
         <input type="file" id="fileInput" title="Sélectionner un fichier à partager">
         <div id="preview" class="file-preview"></div>
         <button onclick="uploadFile()">Partager fichier</button>
@@ -94,6 +115,31 @@
         const input = document.getElementById("messageInput");
         input.value += emoji;
         input.focus();
+    }
+
+    function sendMessage() {
+        const message = document.getElementById("messageInput").value;
+        const group = document.getElementById("groupSelect").value;
+        const username = localStorage.getItem("username") || "Invité";
+
+        if (message.trim() !== "") {
+            socket.emit("chat message", { username: username, message: message, group: group });
+            document.getElementById("messageInput").value = "";
+        }
+    }
+
+    function uploadFile() {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+        const username = localStorage.getItem("username") || "Invité";
+
+        if (file) {
+            socket.emit("chat message", {
+                username: username,
+                message: `📁 Fichier partagé : ${file.name}`
+            });
+            document.getElementById("preview").innerText = "Fichier partagé : " + file.name;
+        }
     }
 </script>
 

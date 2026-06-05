@@ -8,7 +8,10 @@ if(!username){
 }
 
 // Display username in header
-document.getElementById("userDisplay").textContent = `Connecté: ${username}`;
+const userDisplay = document.getElementById("userDisplay");
+if (userDisplay) {
+    userDisplay.textContent = `Connecté: ${username}`;
+}
 
 socket.emit("join", username);
 
