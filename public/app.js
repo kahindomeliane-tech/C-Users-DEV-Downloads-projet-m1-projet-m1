@@ -3,7 +3,6 @@ const socket = io();
 const username = localStorage.getItem("username");
 
 if(!username){
-
     window.location = "login.html";
 }
 
@@ -34,16 +33,20 @@ function sendMessage(){
 
     const input = document.getElementById("messageInput");
 
-    const message = input.value;
+    const message = input ? input.value : '';
 
-    if(!message) return; // don't send empty messages
+    if(!message || message.trim() === '') return;
+
+    console.log('Envoi de message:', message);
 
     socket.emit("chat message", {
         username,
         message
     });
 
-    input.value = "";
+    if (input) {
+        input.value = "";
+    }
 }
 
 socket.on("chat message", (data)=>{
@@ -82,8 +85,10 @@ socket.on("system", (msg)=>{
 
 async function uploadFile(){
     const fileInput = document.getElementById("fileInput");
-    const file = fileInput.files[0];
+    const file = fileInput ? fileInput.files[0] : null;
     if(!file) return alert('Aucun fichier sélectionné');
+
+    console.log('Upload de fichier:', file.name);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -107,8 +112,9 @@ async function uploadFile(){
     });
 
     // clear preview and input
-    document.getElementById('preview').innerHTML = '';
-    fileInput.value = '';
+    const preview = document.getElementById('preview');
+    if (preview) preview.innerHTML = '';
+    if (fileInput) fileInput.value = '';
 }
 
 // Preview selected file before uploading
@@ -153,3 +159,8 @@ function logout(){
 
     window.location = "login.html";
 }
+
+// Expose functions globally for inline button handlers
+window.sendMessage = sendMessage;
+window.uploadFile = uploadFile;
+window.logout = logout;

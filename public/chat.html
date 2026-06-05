@@ -22,11 +22,13 @@
 
         <input type="text" id="messageInput" placeholder="Écrivez votre message...">
 
-        <button onclick="sendMessage()">Envoyer</button>
+        <button type="button" onclick="sendMessage()">Envoyer</button>
 
         <input type="file" id="fileInput" title="Sélectionner un fichier à partager">
 
-        <button onclick="uploadFile()">Partager fichier</button>
+        <div id="preview" class="file-preview"></div>
+
+        <button type="button" onclick="uploadFile()">Partager fichier</button>
 
     </div>
 
